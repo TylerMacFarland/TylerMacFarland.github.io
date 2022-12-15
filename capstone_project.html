@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Tyler MacFarland Portfolio</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Projects</a></li>
+							<li><a href="about_me.html">About Me</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/tyler-macfarland-8a2986168/" class="icon brands fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/tmac0596" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h1>GOOGLE DATA ANALYTICS COURSE CAPSTONE PROJECT</h1>
+								</header>
+                                <a class="image main"><img src="images/bike_share.jpg" alt="" /></a>
+								<!-- Text stuff -->
+									<h2>Caveat</h2>
+									<p>The following information is about a fictional company named <i>Cyclistic</i>. 
+                                        Any references to this company are solely to provide a narrative for the project.
+                                         The data used is a public data set made available by Motivate International Inc. 
+                                         under this <a href="https://ride.divvybikes.com/data-license-agreement">license</a>.</p>
+									<hr />
+									<h2>Quick Links</h2>
+									<p><a href='https://github.com/tmac0596/Portfolio-Projects/blob/0af422f36e397cb7798de7cea69059ebd346ba49/Cyclistic%20Project%20SQL%20Code'><b>SQL Code Used</b></a></p>
+									<p><a href='https://public.tableau.com/views/CyclisticCaseStudyVisualizationsNov2021-Oct2022_16704513626910/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link'><b>Tableau Visualizations</b></a></p>
+									<p><a href='https://docs.google.com/spreadsheets/d/1geKeX6Ndha28uc47UmJJ5O3vxfr2hzRmsNawz_pyIZg/edit?usp=sharing'><b>Google Sheets</b></a></p>
+                                    <hr />
+                                    <header>
+                                        <h3>Abstract</h3>
+                                    </header>
+                                    <p>This project analyzes the differences amongst casual riders and members of the bike share company Cyclistic, based out of Chicago IL. These differences would be used to help the Cyclistic advertisement team develop a strategy aimed towards turning causal riders into annual members. To answer this question data from Nov. 2012 through Oct. 2022 was cleaned, analyzed, and visualized through the use of a SQL database, Excel, and Tableau. </p>
+                                    <p>The key findings were that casual riders use the bikes predominantly on the weekends, where members predominantly use the bikes during the week. Causal riders mostly use the bikes during the summer where members are using the bikes more consistently throughout the year. Casual riders are using the bikes for longer rides than members. Finally, casual riders prefer electric bikes over standard petal bikes where members appear to have no discernible preference. </p>
+									<header>
+										<h3>Background Information</h3>
+									</header>
+									<p><span class="image right"><img src="images/chicago bike.jpg" alt="" /></span>Cyclistic is a bike share company based out of Chicago IL that began operation in 2016. The company has a fleet of over 5,800 bicycles and 692 docking stations. All of the bikes are geotracked and can be unlocked from one station and returned to any other station throughout the city. </p>
+
+                                        <p>Cyclistic offers three price options for customers. A single ride pass, a day pass, and their annual membership. The company refers to single ride pass holders and day pass holders as “causal riders” and those who have the annual pass are considered Cyclistic members.</p>
+                                        
+                                       <p> As a company Cyclistic has determined that annual members are significantly more profitable than casual riders. Moving forward with this information they want to design marketing strategies that are aimed to turn causal riders into annual members. In order to do this they have asked the data analysts to help them better understand how casual riders and annual members use Cyclistic differently.
+                                        </p>
+									<header>
+										<h3>Business Task</h3>
+									</header>
+									<p>Determine how annual members and causal riders use Cyclistic bikes differently by analyzing their data from Nov 2021 through Oct 2022. Use this information to help the marketing team understand its user base better so they can create strategies aimed towards turning casual riders into annual members. </p>
+									<header>
+										<h3>Description of Data</h3>
+									</header>
+									<p>The data used in this analysis was given by the Cyclistics’ team and contains data ranging from Nov of 2021 through Oct of 2022. All of the data is collected from users in Chicago. The information broke down by starting and ending location of the bike, start and end time of the ride, the type of bike used, the user type (either "Member" or "Casual"), and finally the longitude and latitude of the start and end locations. </p>
+
+                                       <p> It should be noted that this data has no user identification for each ride. Meaning there is no way to distinguish one user from another or how many times individuals are using the service. All the data tells us is if the user is a member or causal rider. 
+                                        </p>
+                                    <header>
+                                        <h3>Data Cleaning</h3>
+                                    </header>
+                                    <p>The data was given as CSV files and due to the high volume of information given I began by uploading all of it to a PostgreSQL server. Each individual file contained a month's worth of data. I began by combining all of the information into one table that I created with PostgreSQL to allow for easier manipulation of the data as well as a full year view. There were a total of 5,755,694 individual rides accounted for. </p>
+
+                                    <p> Once everything was properly uploaded into PostgreSQL, I began spending time with, and running scripts to manipulate the data to see what issues or trends became immediately apparent. The first issue I ran into was some of the dates of the bike return time stamps were occurring before the start dates. These rides were removed during analysis using the following SQL code. </p>
+                                    <pre><code>WHERE 
+    ended_at > started_at</code></pre>
+                                    <p>The next issue that was discovered was a third bike type that only occurred with casual users that was named “docked_bike”. All of these entries had very extended rental periods associated with them, upwards of thirty days at a time. Since these bike types were only associated with casual users and due to their abnormally high rental times, all of these data points were removed whenever data was pulled that looked at both members and casual users. This was done using the following SQL Code. 
+                                        </p>  
+                                        <pre><code>WHERE 
+    rideable_type NOT LIKE 'docked%'</code></pre>
+                                    <p>Once the data was cleaned I began writing the scripts that I would use for my findings. The full SQL code used for this project can be viewed <a href='https://github.com/tmac0596/Portfolio-Projects/blob/0af422f36e397cb7798de7cea69059ebd346ba49/Cyclistic%20Project%20SQL%20Code'><b>here</b></a> </p>
+                                    <header>
+                                        <h3>Findings and Supporting Visualizations</h3>
+                                    </header>  
+                                    <p>For all of the findings discussed please view the relative Dashboard at the <a href='https://public.tableau.com/views/CyclisticCaseStudyVisualizationsNov2021-Oct2022_16704513626910/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link'>Tableau link here</a></p>
+                                    <p>The first thing to look at is the most common starting points for the bikes. If you look at the casual riders it is clear that the top three starting locations are popular tourist destinations in the city. Navy Pier being the most popular followed by Grant and Millennium Park. When looking at the top three starting locations for the members it is all cross streets in areas that are more residential or business districts that don't have a large tourist attraction in the immediate vicinity. </p>
+									<a><center><img src="images/Starting Location.png" alt="" class="centerImage" width="400" height="200" /></center></a>
+                                    <br> 
+                                    <p>Next is the usage of Cyclistic bikes on a monthly basis. When looking at the bar chart we can see that casual riders are using the bikes much more regularly in the summer months, specifically in June, July, and August. Before and after these summer months usage drops off significantly. When comparing this to the members' usage of the bikes, while it is true that the summer months have more usage, the usage is fairly consistent throughout the summer and the drop off in the months before and after is not as drastic. </p>
+                                    <a><center><img src="images/Rides per month.png" alt="" class="centerImage" width="600" height="375" /></center></a>
+                                    <br>
+                                    <p>Next is the usage of bikes on a daily basis. When looking at the data visualization titled “Count of Total Rides per Weekday” it is clear that casual riders are using the bikes more often on the weekend. Saturday and Sunday being the most popular days by far for casual users. When comparing this to members it is the direct opposite. Members are using the bikes more often during the weekdays, Monday through Friday, and not as much on the weekend. This is most likely because members are using the bikes to commute for work whereas casual users are using the bikes for leisure on the weekends or could possibly be from out of town and visiting on their days off. </p>
+                                    <a><center><img src="images/Days of the Week.png" alt="" class="centerImage" width="600" height="350" /></center></a>
+                                    <br>
+                                    <p>Now we can look at the average ride time for casual users versus members. It is clear from the visualization that casual users are riding the bikes on average over twice as long as members are. The casual users are using the bikes on average for 21 minutes and 35 seconds which is 58% longer than members' average rides of 12 minutes 43 seconds. </p>
+                                    <a><center><img src="images/Ride Duration.png" alt="" class="centerImage" width="600" height="350" /></center></a>
+                                    <br>
+                                    <p>Lastly we can look at the types of bikes being used. There are two types of bikes, classic pedal bikes and electric bikes. We can see from the visualization that causal riders prefer the electric bikes over the causal bikes with about 59% of rides by casual riders are on an electric bike. For members we see that there is almost a 50/50 division between the classic and electric bike, meaning the members do not have a preference towards one or the other bike type.</p>
+                                    <a><center><img src="images/Bike Type.png" alt="" class="centerImage" width="600" height="350" /></center></a>
+                                    <br>
+                                    <header>
+                                        <h3>Recommendations</h3>
+                                    </header> 
+                                        <p>Here are my top recommendations based on the information found during this analysis to target casual riders for upgrading them to members. </p>
+                                        <p>First would be to increase advertising in areas where casual riders are high but not large tourist destinations. While advertising at large destinations such as Navy Pier and Shedd Aquarium is important due to the large amount of user in those areas, by targeting areas outside of those major tourist destinations you are more likely to find the demographic of people who are causal riders but live in the city year round and who would benefit most from a membership.</p>
+                                        <p>Second is to look at the days of the week. It is clear from the data that most of the casual riders are utilizing the bikes on the weekends. Start with increasing digital advertisements on the weekends so casual users are more likely to see them. Also getting large physical advertisements near the top destinations for casual riders such as Navy Pier. Another route is to offer some sort of discount. The first month free if they sign up for the annual membership during a busy holiday weekend. Or offer a slightly cheaper annual membership where a user has unlimited rides Friday through Sunday, a weekend warriors pass.</p>
+                                        <p>Third is looking at the time of year the bikes are being used. We can see from the data that members are using the bikes more often throughout the year than the casual riders. The casual riders are predominantly using the bikes during the early summer months. Start with increased advertisement during this time. Target the top areas the casual riders are using the bikes such as Grant or Millennium Park . Offer a discount if they sign up for a membership during the summer. Or offer a discounted membership that only lasts during those peak summer months.</p>
+                                        <p>Finally look at the bike types. It can be seen that casual riders have a preference for the electric bikes. This may be due to the longer ride time that the casual riders are exhibiting. Whatever the reason for this preference, use it for the company's advantage. Maybe include a small advertisement on all the electric bikes about the benefits of being a member. Or offer more electric bikes throughout the city to encourage the casual riders to want to use the service time and time again.  </p>
+                                    <hr />
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section class="alt">
+								<h3>Address</h3>
+								<p>Los Olivos, CA<br />
+								93441</p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p><a href="#">(269) 282-4652</a></p>
+							</section>
+							<section>
+								<h3>Email</h3>
+								<p><a href="#">tmac0596@gmail.com</a></p>
+							</section>
+							<section>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="https://www.linkedin.com/in/tyler-macfarland-8a2986168/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+									<li><a href="https://github.com/tmac0596" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
