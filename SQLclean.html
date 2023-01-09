@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Tyler MacFarland Portfolio</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Projects</a></li>
+							<li><a href="about_me.html">About Me</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.linkedin.com/in/tyler-macfarland-8a2986168/" class="icon brands fa-linkedin"><span class="label">linkedin</span></a></li>
+							<li><a href="https://github.com/tmac0596" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h1>SQL Data Cleaning Project</h1>
+								</header>
+                                <a href="https://github.com/TylerMacFarland/Portfolio-Projects/blob/main/SQL%20Data%20Cleaning%20Project" class="image fit"><img src="images/SQL.jpg" alt="" width="300" height="600"/></a>
+								<!-- Text stuff -->
+									<hr />
+									<h2>SQL Code</h2>
+									<p><a href='https://github.com/TylerMacFarland/Portfolio-Projects/blob/main/SQL%20Data%20Cleaning%20Project'><b>SQL Code Used</b></a></p>
+                                    <hr />
+                                    <header>
+                                        <h3>Background Information</h3>
+                                    </header> 
+                                        <p>For this project I took a public data set that looks at Nashville house sales and uploaded the data to a PostgreSQL server. 
+											This project looks at cleaning the raw data to make it easier to work with and will not focus on analyzing the data itself.
+											 This project was originally shared by Alex the Analyst, a youtuber who helps aspiring data analysts like myself. He created 
+											 this project for open use. For more detail follow the link <a href="https://www.youtube.com/watch?v=8rO7ztF4NtU&list=PLUaB-1hjhk8H48Pj32z4GZgGWyylqv85f&index=3"><b>here.</b></a> </p>
+										<p>For reference the table that I created that will be used in my FROM statements was simply named “house”. For the column names I used a conventional snake_case style naming system.
+											 The link above is where you can find the full code used for this project. Below is a write up for each section going into more detail as to how and why everything was done.</p> 
+										<hr />
+									<header>
+										<h3>Populate “property_address” Data</h3>
+									</header>
+										<p>There were fields in the “property_address” column that were NULL and needed to be populated. Upon further examination you can see that these NULL fields shared the same “parcelid” 
+											with other sales. Since the parcel ids were tied to a unique address we know that if two sales share the same parcel id then the property address would be the same. So we populated the 
+											NULL “property_address” values using an inner join. </p>
+										<p>I joined the “house” table on itself using an inner join and looked at entries where the “parcelid” was the same but the “uniqueid” was not the same. This gave me all of the NULL
+											 “property_address” fields that needed to be populated and paired them with a corresponding address from another sale that shared the same “parcelid”. From there I updated the table
+											  using this inner join. This populated all of the NULL “property_address” fields with the appropriate addresses.</p>
+											  <pre><code>SELECT 
+	a.parcelid, 
+	b.parcelid, 
+	a.property_address, 
+	b.property_address
+FROM house AS a
+JOIN house AS b
+	ON a.parcelid = b.parcelid
+	AND a.uniqueid != b.uniqueid
+WHERE a.property_address IS NULL</code></pre> 
+											  <hr />
+									<header>
+										<h3>Separating “property_address” into Individual Columns</h3>
+									</header>
+										<p>The “property_address” column contained the full address as well as the city name. This made it very hard to use in a practical setting, so this step was to separate out the address 
+											and the city. This was completed using the SUBSTRING code. The syntax is SUBSTRING(string, start, length). For the length portion I used the STRPOS code which is used to find the 
+											position of a substring within a string of text. Syntax is STRPOS(string, substring). So I told it to look at the property_address and the substring was the “,” that separated the 
+											address and the city. The -1 was simply to tell it to move back one position to remove the comma from the output. The same code was done for the city but for the starting position 
+											I once again used STRPOS to select everything after the comma. This resulted in an output of just the city name. From there I updated the table using the same code. </p>
+											<pre><code>SELECT
+	SUBSTRING(property_address, 1, STRPOS(property_address, ',')-1) AS address,
+	SUBSTRING(property_address,STRPOS(property_address,',')+1,STRPOS(property_address,',')) AS city
+FROM house
+</code></pre> 
+											<hr />
+									<header>
+										<h3>Separating “owner_address” into Individual Columns</h3>
+									</header>
+										<p>The “owner_address” column contained an address, city, as well as state. Much like the “property_addresss” column this made it very difficult to use in a practical setting so I 
+											separated out the three components. This could have been completed the same way as the “property_address” but I showcased a different method to demonstrate how the same task can 
+											be done multiple ways within SQL. For this separation I used the SPLIT_PART code which has the following syntax SPLIT_PART(string, delimiter, position). This is very useful since 
+											there are multiple commas in the owner address. It easily lets me select which part of the address I want then outputs it. I then added the appropriate columns and added the data using the same code. </p>
+										<pre><code>SELECT 
+	SPLIT_PART(owner_address,',',1) AS owner_address,
+	SPLIT_PART(owner_address,',',2) AS owner_city,
+	SPLIT_PART(owner_address,',',3) AS owner_state
+FROM house</code></pre>
+										
+										<hr/>
+									<header>
+										<h3>Change Y and N to Yes and No in "sold_as_vacant" field</h3>
+									</header>
+										<p>The “sold_as_vacant” field is predominantly made up of “Yes” and “No” values but some entries are entered as “Y” and “N”. This code changes everything to “Yes” and “No”. To do this I used a CASE 
+											statement that tells the database for every “Y” change it to “Yes”, for every “N” change it to “No”, else lease the value how it is.</p>
+										<pre><code>SELECT 
+	sold_as_vacant,
+	CASE WHEN sold_as_vacant = 'Y' THEN 'Yes'
+	WHEN sold_as_vacant = 'N' THEN 'No'
+	ELSE sold_as_vacant END
+FROM house</code></pre>
+											<hr/>
+									<header>
+										<h3>Discover Duplicates</h3>
+									</header>
+										<p>There are entries that have the exact same information within them yet different uniquid’s. This code is used to find those duplicates. This is done by using the ROW_NUMBER function which assigns 
+											integers to each row in a given output. The syntax for this function is as follows. ROW_NUMBER() OVER( [PARTITION BY column_1, column_2,…] [ORDER BY column_3,column_4,…]). In the partition by section
+											 I entered “parcelid”, “property_address”, “sale_price”, “sale_date”, and “legal_reference”. This is telling the function that if at least one of these column values is unique then it will be assigned 
+											 a value of “1”. Only rows where all five of these values are identical with another row will result in an output of “2” which indicates that it is a duplicate. </p>
+											<pre><code>SELECT *,
+	ROW_NUMBER() OVER(
+	PARTITION BY parcelid,
+				property_address,
+				sale_price,
+				sale_date,
+				legal_reference
+			ORDER BY uniqueid
+			) AS row_num
+	FROM house)</code></pre>
+											 <hr/>
+									<header>
+										<h3>Delete Unused Columns</h3>
+									</header>
+										<p>Finally I deleted columns that were no longer useful. In a professional setting I would normally not delete data from a raw data set. This was simply done to demonstrate the knowledge of how it is done.
+											 Simply use the function DROP COLUMN followed by which ones are to be deleted. </p>
+									<pre><code>ALTER TABLE house
+DROP COLUMN property_address, owner_address, tax_district</code></pre>
+										<hr/>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section class="alt">
+								<h3>Address</h3>
+								<p>Los Olivos, CA<br />
+								93441</p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p><a href="#">(269) 282-4652</a></p>
+							</section>
+							<section>
+								<h3>Email</h3>
+								<p><a href="#">tmac0596@gmail.com</a></p>
+							</section>
+							<section>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="https://www.linkedin.com/in/tyler-macfarland-8a2986168/" class="icon brands alt fa-linkedin"><span class="label">linkedin</span></a></li>
+									<li><a href="https://github.com/tmac0596" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
